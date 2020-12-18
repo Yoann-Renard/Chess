@@ -5,8 +5,8 @@
 typedef struct {
         char* piece;
         char* nom_case;
-}Echequier;
-Echequier plateau[8][8];
+}Echiquier;
+Echiquier plateau[8][8];
 
 int reset_plateau(void)
 {
@@ -17,7 +17,7 @@ int reset_plateau(void)
     {
         for ( j = 0 ; j < 8 ; j++)
         {
-            plateau[i][j].piece="0";
+            plateau[i][j].piece="00";
         }
     }
 
