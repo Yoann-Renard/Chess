@@ -102,8 +102,9 @@ int tour(int x,int y,int *deplacement)
     {
         
         // Bas
-        for (int i = x; i < 8; i++)
+        for (int i = x+1; i < 8 && plateau[i-1][y].piece[1] != 'n'; i++)
         {
+            
             if ( (strcmp(plateau[i][y].piece,"00") == 0 )|| plateau[i][y].piece[1] == 'n' )
             {
                 deplacement[j] = i;
@@ -111,10 +112,11 @@ int tour(int x,int y,int *deplacement)
                 deplacement[j] = y;
                 j++;
             } else {break;}
+        
         }
         
         // Haut 
-        for (int i = x; i >= 0; i--)
+        for (int i = x-1 ; i >= 0 && plateau[i+1][y].piece[1] != 'n'; i--)
         {
             if ( (strcmp(plateau[i][y].piece,"00") == 0) || plateau[i][y].piece[1] == 'n' )
             {
@@ -126,7 +128,7 @@ int tour(int x,int y,int *deplacement)
         }
         
         // Gauche
-        for (int i = y; i >= 0; i--)
+        for (int i = y-1; i >= 0 && plateau[x][i+1].piece[1] != 'n'; i--)
         {
             if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'n' )
             {
@@ -138,7 +140,7 @@ int tour(int x,int y,int *deplacement)
         }
         
         // Droite
-        for (int i = y; i < 8; i++)
+        for (int i = y+1; i < 8 && plateau[x][i-1].piece[1] != 'n'; i++)
         {
             if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'n' )
             {
@@ -154,7 +156,7 @@ int tour(int x,int y,int *deplacement)
     if(plateau[x][y].piece[1] == 'n')
     {
         // Bas
-        for (int i = x; i < 8; i++)
+        for (int i = x+1; i < 8 && plateau[i-1][y].piece[1] != 'b'; i++)
         {
             if ( (strcmp(plateau[i][y].piece,"00") == 0) || plateau[i][y].piece[1] == 'b')
             {
@@ -165,7 +167,7 @@ int tour(int x,int y,int *deplacement)
             }else {break;}
         }
         // Haut 
-        for (int i = x; i >= 0; i--)
+        for (int i = x-1; i >= 0 && plateau[i+1][y].piece[1] != 'b'; i--)
         {
             if ( (strcmp(plateau[i][y].piece,"00") == 0) || plateau[i][y].piece[1] == 'b' )
             {
@@ -176,7 +178,7 @@ int tour(int x,int y,int *deplacement)
             }else {break;}
         }
         // Gauche
-        for (int i = y; i >= 0; i--)
+        for (int i = y-1; i >= 0 && plateau[x][i+1].piece[1] != 'b'; i--)
         {
             if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'b' )
             {
@@ -185,27 +187,29 @@ int tour(int x,int y,int *deplacement)
                 deplacement[j] = i;
                 j++;
             }else {break;}
+        }
+    
+        // Droite
+        for (int i = y+1; i < 8 && plateau[x][i-1].piece[1] != 'b'; i++)
+        {
+            if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'b' )
+            {
+                deplacement[j] = x;
+                j++;
+                deplacement[j] = i;
+                j++;
+            }else {break;}
+            
         }
     }
-        // Droite
-        for (int i = y; i < 8; i++)
-        {
-            if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'b' )
-            {
-                deplacement[j] = x;
-                j++;
-                deplacement[j] = i;
-                j++;
-            }else {break;}
-        }
-        for (int i  = 0 ; i < (j+1); i = i+2)
+    
+        for (int i = 0 ; i < j; i = i+2)
     {
-        printf("%d/%d",deplacement[i],deplacement[i+1]);
+        printf("%d/%d\n",deplacement[i],deplacement[i+1]);
     }
     
     return j;
 }
-
 
 	
 int main (void)
@@ -213,8 +217,9 @@ int main (void)
 	int *deplacement = NULL;
     deplacement = (int*)malloc(sizeof(int)*64);
     reset_plateau();
-    tour(0,0,deplacement);
+    tour(4,4,deplacement);
     
     return 0;
 }
  
+
