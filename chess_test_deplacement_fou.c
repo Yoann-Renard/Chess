@@ -102,50 +102,51 @@ int fou(int x, int y, int *deplacement)
     // Si noire
     if(plateau[x][y].piece[1] == 'n')
     {
+        
         // Bas Droite
-        for (int i=x, j=y; i<8 && j<8; i++, j++)
+        for (int i=x+1, k=y+1; i<8 && k<8 && plateau[i-1][k-1].piece[1] != 'b'; i++, k++)
             {
-                if ( (strcmp(plateau[i][j].piece,"00") == 0) || plateau[i][j].piece[1] == 'b' )
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'b' )
                 {
                     deplacement[j] = i;
                     j++;
-                    deplacement[j] = j;
+                    deplacement[j] = k;
                     j++;
                 }else {break;}
             }
             
         // Bas Gauche
-        for (int i=x, j=y; i<8 && j>=0; i++, j--)
+        for (int i=x+1, k=y-1; i<8 && k>=0 && plateau[i-1][k+1].piece[1] != 'b'; i++, k--)
             {
-                if ( (strcmp(plateau[i][j].piece,"00") == 0) || plateau[i][j].piece[1] == 'b' )
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'b' )
                 {
                     deplacement[j] = i;
                     j++;
-                    deplacement[j] = j;
+                    deplacement[j] = k;
                     j++;
                 }else {break;}
             }
         
         // Haut Gauche
-        for (int i=x, j=y; i>=0 && j>=0; i--, j--)
+        for (int i=x-1, k=y-1; i>=0 && k>=0 && plateau[i+1][k+1].piece[1] != 'b'; i--, k--)
             {
-                if ( (strcmp(plateau[i][j].piece,"00") == 0) || plateau[i][j].piece[1] == 'b' )
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'b' )
                 {
                     deplacement[j] = i;
                     j++;
-                    deplacement[j] = j;
+                    deplacement[j] = k;
                     j++;
                 }else {break;}
             }
         
         // Haut Droite
-        for (int i=x, j=y; i>=0 && j<8; i--, j++)
+        for (int i=x-1, k=y+1; i>=0 && k<8 && plateau[i+1][k-1].piece[1] != 'b'; i--, k++)
             {
-                if ( (strcmp(plateau[i][j].piece,"00") == 0) || plateau[i][j].piece[1] == 'b' )
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'b' )
                 {
                     deplacement[j] = i;
                     j++;
-                    deplacement[j] = j;
+                    deplacement[j] = k;
                     j++;
                 }else {break;}
             }
@@ -154,57 +155,58 @@ int fou(int x, int y, int *deplacement)
         // Si blanche
     if(plateau[x][y].piece[1] == 'b')
     {
+        
         // Bas Droite
-        for (int i=x, j=y; i<8 && j<8; i++, j++)
+        for (int i=x+1, k=y+1; i<8 && k<8 && plateau[i-1][k-1].piece[1] != 'n'; i++, k++)
             {
-                if ( (strcmp(plateau[i][j].piece,"00") == 0) || plateau[i][j].piece[1] == 'n' )
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'n' )
                 {
                     deplacement[j] = i;
                     j++;
-                    deplacement[j] = j;
+                    deplacement[j] = k;
                     j++;
+                    
                 }else {break;}
             }
-            
         // Bas Gauche
-        for (int i=x, j=y; i<8 && j>=0; i++, j--)
+        for (int i=x+1, k=y-1; i<8 && k>=0 && plateau[i-1][k+1].piece[1] != 'n'; i++, k--)
             {
-                if ( (strcmp(plateau[i][j].piece,"00") == 0) || plateau[i][j].piece[1] == 'n' )
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'n' )
                 {
                     deplacement[j] = i;
                     j++;
-                    deplacement[j] = j;
+                    deplacement[j] = k;
                     j++;
                 }else {break;}
             }
         
         // Haut Gauche
-        for (int i=x, j=y; i>=0 && j>=0; i--, j--)
+        for (int i=x-1, k=y-1; i>=0 && k>=0 && plateau[i+1][k+1].piece[1] != 'n'; i--, k--)
             {
-                if ( (strcmp(plateau[i][j].piece,"00") == 0) || plateau[i][j].piece[1] == 'n' )
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'n' )
                 {
                     deplacement[j] = i;
                     j++;
-                    deplacement[j] = j;
+                    deplacement[j] = k;
                     j++;
                 }else {break;}
             }
         
         // Haut Droite
-        for (int i=x, j=y; i>=0 && j<8; i--, j++)
+        for (int i=x-1, k=y+1; i>=0 && k<8 && plateau[i+1][k-1].piece[1] != 'n'; i--, k++)
             {
-                if ( (strcmp(plateau[i][j].piece,"00") == 0) || plateau[i][j].piece[1] == 'n' )
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'n' )
                 {
                     deplacement[j] = i;
                     j++;
-                    deplacement[j] = j;
+                    deplacement[j] = k;
                     j++;
                 }else {break;}
             }
     }
-    for (int i  = 0 ; i < (j+1); i = i+2)
+    for (int i = 0 ; i < j; i = i+2)
     {
-        printf("%d/%d",deplacement[i],deplacement[i+1]);
+        printf("%d/%d\n",deplacement[i],deplacement[i+1]);
     }
     return j;
 }
@@ -216,8 +218,10 @@ int main (void)
 	int *deplacement = NULL;
     deplacement = (int*)malloc(sizeof(int)*64);
     reset_plateau();
-    fou(0,0,deplacement);
+    fou(4,4,deplacement);
     
     return 0;
 }
+ 
+
  
