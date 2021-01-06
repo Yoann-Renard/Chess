@@ -1,4 +1,3 @@
- 
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,16 +28,18 @@ int reset_plateau(void)
     plateau[0][1].piece = plateau[0][6].piece = "cn";
     plateau[0][2].piece = plateau[0][5].piece = "fn";
     plateau[0][3].piece = "dn";
-    plateau[0][4].piece = "rn";
+    plateau[3][3].piece = "rn";
+    plateau[7][7].piece = "00";
+    plateau[0][4].piece = "00";
 
                             // Pions noirs 
     for (i = 0; i < 8 ; i++)
     {
-        plateau[1][i].piece = "pn";
+        plateau[1][i].piece = "pb";
     }
 
                             // On place les pièces blanches
-    plateau[7][0].piece = plateau[7][7].piece = "tb";
+    plateau[7][0].piece = plateau[4][4].piece = "tb";
     plateau[7][1].piece = plateau[7][6].piece = "cb";
     plateau[7][2].piece = plateau[7][5].piece = "fb";
     plateau[7][3].piece = "db";
@@ -71,26 +72,9 @@ int reset_plateau(void)
 
 
                             // Affichage du plateau sur la console
-    for (i=0;i<8;i++)
-    {
-        for (j=0;j<8;j++)
-        {
-            printf("%s", plateau[i][j].piece);
-        }
-        printf("\n");
-        
-    }
-    printf("\n");
-    for (i=0;i<8;i++)
-    {
-        for (j=0;j<8;j++)
-        {
-            printf("%s", plateau[i][j].nom_case);
-        }
-        printf("\n");
-    }
+
     
-        return 0;
+    return 0;
 }
 
 int* recup(char *caseAVerif)
@@ -115,14 +99,968 @@ int* recup(char *caseAVerif)
 
     
 }
+int reine(int x, int y, int *deplacement)
+{
+    int j = 0;
+    
+    
+    // Si noire
+    if(plateau[x][y].piece[1] == 'n')
+    {
+        // Bas
+        for (int i = x+1; i < 8 && plateau[i-1][y].piece[1] != 'b'; i++)
+        {
+            if ( (strcmp(plateau[i][y].piece,"00") == 0) || plateau[i][y].piece[1] == 'b')
+            {
+                deplacement[j] = i;
+                j++;
+                deplacement[j] = y;
+                j++;
+            }else {break;}
+        }
+        // Haut 
+        for (int i = x-1; i >= 0 && plateau[i+1][y].piece[1] != 'b'; i--)
+        {
+            if ( (strcmp(plateau[i][y].piece,"00") == 0) || plateau[i][y].piece[1] == 'b' )
+            {
+                deplacement[j] = i;
+                j++;
+                deplacement[j] = y;
+                j++;
+            }else {break;}
+        }
+        // Gauche
+        for (int i = y-1; i >= 0 && plateau[x][i+1].piece[1] != 'b'; i--)
+        {
+            if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'b' )
+            {
+                deplacement[j] = x;
+                j++;
+                deplacement[j] = i;
+                j++;
+            }else {break;}
+        }
+    
+        // Droite
+        for (int i = y+1; i < 8 && plateau[x][i-1].piece[1] != 'b'; i++)
+        {
+            if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'b' )
+            {
+                deplacement[j] = x;
+                j++;
+                deplacement[j] = i;
+                j++;
+            }else {break;}
+            
+        }
+        
+        // Bas Droite
+        for (int i=x+1, k=y+1; i<8 && k<8 && plateau[i-1][k-1].piece[1] != 'b'; i++, k++)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'b' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+            
+        // Bas Gauche
+        for (int i=x+1, k=y-1; i<8 && k>=0 && plateau[i-1][k+1].piece[1] != 'b'; i++, k--)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'b' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+        
+        // Haut Gauche
+        for (int i=x-1, k=y-1; i>=0 && k>=0 && plateau[i+1][k+1].piece[1] != 'b'; i--, k--)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'b' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+        
+        // Haut Droite
+        for (int i=x-1, k=y+1; i>=0 && k<8 && plateau[i+1][k-1].piece[1] != 'b'; i--, k++)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'b' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+            
+    }
+        // Si blanche
+    if(plateau[x][y].piece[1] == 'b')
+    {
+        // Bas
+        for (int i = x+1; i < 8 && plateau[i-1][y].piece[1] != 'n'; i++)
+        {
+            
+            if ( (strcmp(plateau[i][y].piece,"00") == 0 )|| plateau[i][y].piece[1] == 'n' )
+            {
+                deplacement[j] = i;
+                j++;
+                deplacement[j] = y;
+                j++;
+            } else {break;}
+        
+        }
+        
+        // Haut 
+        for (int i = x-1 ; i >= 0 && plateau[i+1][y].piece[1] != 'n'; i--)
+        {
+            if ( (strcmp(plateau[i][y].piece,"00") == 0) || plateau[i][y].piece[1] == 'n' )
+            {
+                deplacement[j] = i;
+                j++;
+                deplacement[j] = y;
+                j++;
+            }else {break;}
+        }
+        
+        // Gauche
+        for (int i = y-1; i >= 0 && plateau[x][i+1].piece[1] != 'n'; i--)
+        {
+            if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'n' )
+            {
+                deplacement[j] = x;
+                j++;
+                deplacement[j] = i;
+                j++;
+            }else {break;}
+        }
+        
+        // Droite
+        for (int i = y+1; i < 8 && plateau[x][i-1].piece[1] != 'n'; i++)
+        {
+            if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'n' )
+            {
+                deplacement[j] = x;
+                j++;
+                deplacement[j] = i;
+                j++;
+            }else {break;}
+        }
+        
+        // Bas Droite
+        for (int i=x+1, k=y+1; i<8 && k<8 && plateau[i-1][k-1].piece[1] != 'n'; i++, k++)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'n' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                    
+                }else {break;}
+            }
+        // Bas Gauche
+        for (int i=x+1, k=y-1; i<8 && k>=0 && plateau[i-1][k+1].piece[1] != 'n'; i++, k--)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'n' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+        
+        // Haut Gauche
+        for (int i=x-1, k=y-1; i>=0 && k>=0 && plateau[i+1][k+1].piece[1] != 'n'; i--, k--)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'n' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+        
+        // Haut Droite
+        for (int i=x-1, k=y+1; i>=0 && k<8 && plateau[i+1][k-1].piece[1] != 'n'; i--, k++)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'n' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+    }
+    return j;
+}
+int fou(int x, int y, int *deplacement)
+{
+    int j = 0;
+    
+    
+    // Si noire
+    if(plateau[x][y].piece[1] == 'n')
+    {
+        
+        // Bas Droite
+        for (int i=x+1, k=y+1; i<8 && k<8 && plateau[i-1][k-1].piece[1] != 'b'; i++, k++)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'b' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+            
+        // Bas Gauche
+        for (int i=x+1, k=y-1; i<8 && k>=0 && plateau[i-1][k+1].piece[1] != 'b'; i++, k--)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'b' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+        
+        // Haut Gauche
+        for (int i=x-1, k=y-1; i>=0 && k>=0 && plateau[i+1][k+1].piece[1] != 'b'; i--, k--)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'b' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+        
+        // Haut Droite
+        for (int i=x-1, k=y+1; i>=0 && k<8 && plateau[i+1][k-1].piece[1] != 'b'; i--, k++)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'b' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+            
+    }
+        // Si blanche
+    if(plateau[x][y].piece[1] == 'b')
+    {
+        
+        // Bas Droite
+        for (int i=x+1, k=y+1; i<8 && k<8 && plateau[i-1][k-1].piece[1] != 'n'; i++, k++)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'n' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                    
+                }else {break;}
+            }
+        // Bas Gauche
+        for (int i=x+1, k=y-1; i<8 && k>=0 && plateau[i-1][k+1].piece[1] != 'n'; i++, k--)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'n' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+        
+        // Haut Gauche
+        for (int i=x-1, k=y-1; i>=0 && k>=0 && plateau[i+1][k+1].piece[1] != 'n'; i--, k--)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'n' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+        
+        // Haut Droite
+        for (int i=x-1, k=y+1; i>=0 && k<8 && plateau[i+1][k-1].piece[1] != 'n'; i--, k++)
+            {
+                if ( (strcmp(plateau[i][k].piece,"00") == 0) || plateau[i][k].piece[1] == 'n' )
+                {
+                    deplacement[j] = i;
+                    j++;
+                    deplacement[j] = k;
+                    j++;
+                }else {break;}
+            }
+    }
+    return j;
+}
+int tour(int x,int y,int *deplacement)
+{
+    int j = 0;
+    
+    // Si blanche :
+    if(plateau[x][y].piece[1] == 'b')
+    {
+        
+        // Bas
+        for (int i = x+1; i < 8 && plateau[i-1][y].piece[1] != 'n'; i++)
+        {
+            
+            if ( (strcmp(plateau[i][y].piece,"00") == 0 )|| plateau[i][y].piece[1] == 'n' )
+            {
+                deplacement[j] = i;
+                j++;
+                deplacement[j] = y;
+                j++;
+            } else {break;}
+        
+        }
+        
+        // Haut 
+        for (int i = x-1 ; i >= 0 && plateau[i+1][y].piece[1] != 'n'; i--)
+        {
+            if ( (strcmp(plateau[i][y].piece,"00") == 0) || plateau[i][y].piece[1] == 'n' )
+            {
+                deplacement[j] = i;
+                j++;
+                deplacement[j] = y;
+                j++;
+            }else {break;}
+        }
+        
+        // Gauche
+        for (int i = y-1; i >= 0 && plateau[x][i+1].piece[1] != 'n'; i--)
+        {
+            if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'n' )
+            {
+                deplacement[j] = x;
+                j++;
+                deplacement[j] = i;
+                j++;
+            }else {break;}
+        }
+        
+        // Droite
+        for (int i = y+1; i < 8 && plateau[x][i-1].piece[1] != 'n'; i++)
+        {
+            if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'n' )
+            {
+                deplacement[j] = x;
+                j++;
+                deplacement[j] = i;
+                j++;
+            }else {break;}
+        }
+    }
+    
+    // Si noire :
+    if(plateau[x][y].piece[1] == 'n')
+    {
+        // Bas
+        for (int i = x+1; i < 8 && plateau[i-1][y].piece[1] != 'b'; i++)
+        {
+            if ( (strcmp(plateau[i][y].piece,"00") == 0) || plateau[i][y].piece[1] == 'b')
+            {
+                deplacement[j] = i;
+                j++;
+                deplacement[j] = y;
+                j++;
+            }else {break;}
+        }
+        // Haut 
+        for (int i = x-1; i >= 0 && plateau[i+1][y].piece[1] != 'b'; i--)
+        {
+            if ( (strcmp(plateau[i][y].piece,"00") == 0) || plateau[i][y].piece[1] == 'b' )
+            {
+                deplacement[j] = i;
+                j++;
+                deplacement[j] = y;
+                j++;
+            }else {break;}
+        }
+        // Gauche
+        for (int i = y-1; i >= 0 && plateau[x][i+1].piece[1] != 'b'; i--)
+        {
+            if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'b' )
+            {
+                deplacement[j] = x;
+                j++;
+                deplacement[j] = i;
+                j++;
+            }else {break;}
+        }
+    
+        // Droite
+        for (int i = y+1; i < 8 && plateau[x][i-1].piece[1] != 'b'; i++)
+        {
+            if ( (strcmp(plateau[x][i].piece,"00") == 0) || plateau[x][i].piece[1] == 'b' )
+            {
+                deplacement[j] = x;
+                j++;
+                deplacement[j] = i;
+                j++;
+            }else {break;}
+            
+        }
+    }
+    
+    return j;
+}
+int pion( int y, int x, int *deplacement)
+{
+    int j = 0;
+
+    //test si la piece est blanche ou noire
+    if(plateau[y][x].piece[1] == 'b')
+    {
+        //avant 1 case
+        if(y >= 0 && (strcmp(plateau[y-1][x].piece, "00") == 0))
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x;
+            j++;
+        }
+        //avant 2 cases
+        if(y==6 && (strcmp(plateau[y-2][x].piece,"00") == 0))
+        {
+            deplacement[j] = y-2;
+            j++;
+            deplacement[j] = x;
+            j++;
+        }
+        //diagonale bas droite
+        if(y-1>=0 && x+1<8 && plateau[y-1][x+1].piece[1] == 'n')
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x+1;
+            j++;
+        }
+        //diagonale bas gauche
+        if(y-1>=0 && x-1>=0 && plateau[y-1][x-1].piece[1] == 'n')
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x-1;
+            j++;
+        }
+    }
+    
+    if(plateau[y][x].piece[1] == 'n')
+    {
+        //avant 1 case
+        if((y+1) < 8 && (strcmp(plateau[y+1][x].piece,"00") == 0) )
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x;
+            j++;
+        }
+        //avant 2 cases
+        if(y==1 && (strcmp(plateau[y+2][x].piece, "00") == 0) )
+        {
+            deplacement[j] = y+2;
+            j++;
+            deplacement[j] = x;
+            j++;
+        }
+        //diagonale haut droite
+        if(y+1<8 && x+1<8 && plateau[y+1][x+1].piece[1] == 'b')
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x+1;
+            j++;
+        }
+        //diagonale haut gauche
+        if(y+1<8 && x-1>=0 && plateau[y+1][x-1].piece[1] == 'b')
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x-1;
+            j++;
+        }
+    }
+    return j;
+}
+int cavalier( int y, int x, int *deplacement)
+{
+    int j = 0;
+    
+    
+    //test si la piece est blanche ou noire
+    if(plateau[y][x].piece[1] == 'b')
+    {
+        //droite
+        if((y+1 < 8) && (x+2 < 8) && (strcmp(plateau[y+1][x+2].piece, "00") == 0 || plateau[y+1][x+2].piece[1] == 'n'))
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x+2;
+            j++;
+        }
+        
+        if((y-1 >= 0) && (x+2 < 8) && (strcmp(plateau[y-1][x+2].piece,"00") == 0 || plateau[y-1][x+2].piece[1] == 'n'))
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x+2;
+            j++;
+        }
+        //arrière
+        if((y+2 < 8) && (x+1 < 8) && (strcmp(plateau[y+2][x+1].piece, "00") == 0 || plateau[y+2][x+1].piece[1] == 'n') )
+        {
+            deplacement[j] = y+2;
+            j++;
+            deplacement[j] = x+1;
+            j++;
+        }
+        
+        if((y+2 < 8) && (x-1 >= 0) && (strcmp(plateau[y+2][x-1].piece, "00") == 0 || plateau[y+2][x-1].piece[1] == 'n'))
+        {
+            deplacement[j] = y+2;
+            j++;
+            deplacement[j] = x-1;
+            j++;
+        }
+        //avant
+        if((y-2 >= 0) && (x+1 < 8) && (strcmp(plateau[y-2][x+1].piece, "00") == 0 || plateau[y-2][x+1].piece[1] == 'n'))
+        {
+            deplacement[j] = y-2;
+            j++;
+            deplacement[j] = x+1;
+            j++;
+        }
+        
+        if((y-2 >= 0) && (x-1 >= 0) && (strcmp(plateau[y-2][x-1].piece, "00") == 0 || plateau[y-2][x-1].piece[1] == 'n'))
+        {
+            deplacement[j] = y-2;
+            j++;
+            deplacement[j] = x-1;
+            j++;
+        }
+        //gauche
+        if((y+1 < 8) && (x-2 >= 0) && (strcmp(plateau[y+1][x-2].piece,"00") == 0 || plateau[y+1][x-2].piece[1] == 'n'))
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x-2;
+            j++;
+        }
+        
+        if((y-1 >= 0) && (x-2 >= 0) && (strcmp(plateau[y-1][x-2].piece, "00") == 0 || plateau[y-1][x-2].piece[1] == 'n'))
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x-2;
+            j++;
+        }
+        
+    }
+    if(plateau[y][x].piece[1] == 'n')
+    {
+        //droite
+        if((y+1 < 8) && (x+2 < 8) && (strcmp(plateau[y+1][x+2].piece,"00") == 0 || plateau[y+1][x+2].piece[1] == 'b'))
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x+2;
+            j++;
+        }
+        
+        if((y-1 >= 0) && (x+2 < 8) && (strcmp(plateau[y-1][x+2].piece, "00") == 0 || plateau[y-1][x+2].piece[1] == 'b'))
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x+2;
+            j++;
+        }
+        //avant
+        if((y+2 < 8) && (x+1 < 8) && (strcmp(plateau[y+2][x+1].piece,"00") == 0 || plateau[y+2][x+1].piece[1] == 'b'))
+        {
+            deplacement[j] = y+2;
+            j++;
+            deplacement[j] = x+1;
+            j++;
+        }
+        
+        if((y+2 < 8) && (x-1 >= 0) && (strcmp(plateau[y+2][x-1].piece, "00") == 0 || plateau[y+2][x-1].piece[1] == 'b'))
+        {
+            deplacement[j] = y+2;
+            j++;
+            deplacement[j] = x-1;
+            j++;
+        }
+        //arrière
+        if((y-2 >= 0) && (x+1 < 8) && (strcmp(plateau[y-2][x+1].piece,"00") == 0 || plateau[y-2][x+1].piece[1] == 'b'))
+        {
+            deplacement[j] = y-2;
+            j++;
+            deplacement[j] = x+1;
+            j++;
+        }
+        
+        if((y-2 >= 0) && (x-1 >= 0) && (strcmp(plateau[y-2][x-1].piece,"00") == 0 || plateau[y-2][x-1].piece[1] == 'b'))
+        {
+            deplacement[j] = y-2;
+            j++;
+            deplacement[j] = x-1;
+            j++;
+        }
+        //gauche
+        if((y+1 < 8) && (x-2 >= 0) && (strcmp(plateau[y+1][x-2].piece, "00") == 0 || plateau[y+1][x-2].piece[1] == 'b'))
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x-2;
+            j++;
+        }
+        
+        if((y-1 >= 0) && (x-2 >= 0) && (strcmp(plateau[y-1][x-2].piece,"00") == 0 || plateau[y-1][x-2].piece[1] == 'b'))
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x-2;
+            j++;
+        }
+    }
+    return j;
+}
+int roi( int x, int y, int *deplacement)
+{
+    int j = 0;
+    
+    //test si la piece est blanche ou noire
+    if(plateau[y][x].piece[1] == 'b')
+    {
+        //arriere droite
+        if((x+1 < 8) && (y+1 < 8) && (strcmp(plateau[x+1][y+1].piece, "00") == 0 || plateau[x+1][y+1].piece[1] == 'n'))
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x+1;
+            j++;
+        }
+        // arriere
+        if((x+1 < 8) && (y < 8) && (strcmp(plateau[x+1][y].piece,"00") == 0 || plateau[x+1][y].piece[1] == 'n'))
+        {
+            deplacement[j] = y;
+            j++;
+            deplacement[j] = x+1;
+            j++;
+        }
+        //arriere gauche
+        if((x+1 < 8) && (y-1 >= 0) && (strcmp(plateau[x+1][y-1].piece, "00") == 0 || plateau[x+1][y-1].piece[1] == 'n'))
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x+1;
+            j++;
+        }
+        //gauche
+        if((x < 8) && (y-1 >= 8) && (strcmp(plateau[x][y-1].piece, "00") == 0 || plateau[x][y-1].piece[1] == 'n'))
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x;
+            j++;
+        }
+        //avant gauche
+        if((x-1 >= 0) && (y-1 >= 0) && (strcmp(plateau[x-1][y-1].piece, "00") == 0 || plateau[x-1][y-1].piece[1] == 'n'))
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x-1;
+            j++;
+        }
+        //avant
+        if((x-1 >= 0) && (y < 8) && (strcmp(plateau[x-1][y].piece, "00") == 0 || plateau[x-1][y].piece[1] == 'n'))
+        {
+            deplacement[j] = y;
+            j++;
+            deplacement[j] = x-1;
+            j++;
+        }
+        //avant droite
+        if((x-1 >=0) && (y+1 < 8) && (strcmp(plateau[x-1][y+1].piece,"00") == 0 || plateau[x-1][y+1].piece[1] == 'n'))
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x-1;
+            j++;
+        }
+        //droite
+        if((x < 8) && (y+1 < 8) && (strcmp(plateau[x][y+1].piece, "00") == 0 || plateau[x][y+1].piece[1] == 'n'))
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x;
+            j++;            
+        }
+        
+    }
+
+    if(plateau[y][x].piece[1] == 'n')
+    {
+        //arriere droite
+        if((x+1 < 8) && (y+1 < 8) && (strcmp(plateau[x+1][y+1].piece, "00") == 0 || plateau[x+1][y+1].piece[1] == 'b'))
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x+1;
+            j++;
+        }
+        // arriere
+        if((x+1 < 8) && (y < 8) && (strcmp(plateau[x+1][y].piece,"00") == 0 || plateau[x+1][y].piece[1] == 'b'))
+        {
+            deplacement[j] = y;
+            j++;
+            deplacement[j] = x+1;
+            j++;
+        }
+        //arriere gauche
+        if((x+1 < 8) && (y-1 >= 0) && (strcmp(plateau[x+1][y-1].piece, "00") == 0 || plateau[x+1][y-1].piece[1] == 'b'))
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x+1;
+            j++;
+        }
+        //gauche
+        if((x < 8) && (y-1 >=0) && (strcmp(plateau[x][y-1].piece, "00") == 0 || plateau[x][y-1].piece[1] == 'b'))
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x;
+            j++;
+        }
+        //avant gauche
+        if((x-1 >= 0) && (y-1 >=0) && (strcmp(plateau[x-1][y-1].piece, "00") == 0 || plateau[x-1][y-1].piece[1] == 'b'))
+        {
+            deplacement[j] = y-1;
+            j++;
+            deplacement[j] = x-1;
+            j++;
+        }
+        //avant
+        if((x-1 >= 0) && (y < 8) && (strcmp(plateau[x-1][y].piece, "00") == 0 || plateau[x-1][y].piece[1] == 'b'))
+        {
+            deplacement[j] = y;
+            j++;
+            deplacement[j] = x-1;
+            j++;
+        }
+        //avant droite
+        if((x-1 >=0) && (y+1 < 8) && (strcmp(plateau[x-1][y+1].piece,"00") == 0 || plateau[x-1][y+1].piece[1] == 'b'))
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x-1;
+            j++;
+        }
+        //droite
+        if((x < 8) && (y+1 < 8) && (strcmp(plateau[x][y+1].piece, "00") == 0 || plateau[x][y+1].piece[1] == 'b'))
+        {
+            deplacement[j] = y+1;
+            j++;
+            deplacement[j] = x;
+            j++;            
+        }
+        
+    }
+    return j;
+}
+void promotion ( bool testpromo, char *casearr )
+{
+    if ( testpromo == true )
+    {
+        if ( plateau[recup(casearr)[0]][recup(casearr)[1]].piece[1] == 'n' )
+        {
+            if ( recup(casearr)[0] == 7 ) plateau[recup(casearr)[0]][recup(casearr)[1]].piece = "dn";
+        }
+        if ( plateau[recup(casearr)[0]][recup(casearr)[1]].piece[1] == 'b' ) 
+        {
+            if ( recup(casearr)[0] == 0 ) plateau[recup(casearr)[0]][recup(casearr)[1]].piece = "db";
+        }
+    }
+}
+
+void affichage(Echiquier plateau[8][8])
+{
+    int i;
+    int j;
+    for (i=0;i<8;i++)
+    {
+        for (j=0;j<8;j++)
+        {
+            printf("%s ", plateau[i][j].piece);
+        }
+        printf("\n");
+        
+    }
+    printf("\n");
+    for (i=0;i<8;i++)
+    {
+        for (j=0;j<8;j++)
+        {
+            printf("%s ", plateau[i][j].nom_case);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+void echec(void)
+{
+    int *deplacement = (int*)malloc(20*sizeof(int));
+    int xn,yn,xb,yb;
+    int d;
+    // Récupération Des Rois :
+    for ( int i=0; i<8; i++)
+    {
+        for ( int j=0; j<8; j++)
+        {
+            if ( strcmp(plateau[i][j].piece,"rn") == 0 ) 
+            {
+                xn=i; 
+                yn=j;
+            }
+            if ( strcmp(plateau[i][j].piece,"rb") == 0 ) 
+            {
+                xb=i; 
+                yb=j;
+            }
+        }
+    }
+    
+    //printf("Roi Noir : %d|%d\nRoi Blanc : %d|%d\n",xn,yn,xb,yb);  
+    // Test Echec
+    for ( int i=0; i<8; i++ )
+    {
+        for ( int j=0; j<8; j++, d=0)
+        {
+            switch(plateau[i][j].piece[0])
+            {
+                case '0': 
+                    break;
+                case 'r':
+                    break;
+                case 'd':
+                    d = reine(i,j,deplacement);
+                    for ( int k=0; k<d; k=k+2 )
+                    {
+                        if ( plateau[i][j].piece[1] == 'b')
+                        {
+                        if ((deplacement[k]==xn && deplacement[k+1]==yn))
+                        {printf("Roi noir en échec\n");}
+                        }
+                        else
+                        {
+                            if ((deplacement[k]==xb && deplacement[k+1]==yb))
+                            {printf("Roi blanc en échec\n");}
+                        }
+                    }
+                    break;
+                case 'p':
+                    //d = pion(i,j,deplacement);
+                    if ( plateau[i][j].piece[1] == 'b')
+                    {
+                        if((i-1>=0 && j+1<8 && strcmp(plateau[i-1][j+1].piece,"rn") == 0) || (i-1>=0 && j-1>=0 && strcmp(plateau[i-1][j-1].piece,"rn") == 0 ))
+                        {printf("Roi noir en échec\n");}
+                    }
+                    else
+                    {
+                        if((i+1<8 && j+1<8 && strcmp(plateau[i+1][j+1].piece,"rn") == 0) || (i+1<8 && j-1>=0 && strcmp(plateau[i+1][j-1].piece,"rn") == 0))
+                        {printf("Roi blanc en échec\n");}
+                    }
+                    
+                    break;
+                case 'c':
+                    d = cavalier(i,j,deplacement);
+                    for ( int k=0; k<d; k=k+2 )
+                    {
+                        if ( plateau[i][j].piece[1] == 'b')
+                        {
+                        if ((deplacement[k]==xn && deplacement[k+1]==yn))
+                        {printf("Roi noir en échec\n");}
+                        }
+                        else
+                        {
+                            if ((deplacement[k]==xb && deplacement[k+1]==yb))
+                            {printf("Roi blanc en échec\n");}
+                        }
+                    }
+                    break;
+                case 't':
+                    d = tour(i,j,deplacement);
+                    for ( int k=0; k<d; k=k+2 )
+                    {
+                        if ( plateau[i][j].piece[1] == 'b')
+                        {
+                        if ((deplacement[k]==xn && deplacement[k+1]==yn))
+                        {printf("Roi noir en échec\n");}
+                        }
+                        else
+                        {
+                            if ((deplacement[k]==xb && deplacement[k+1]==yb))
+                            {printf("Roi blanc en échec\n");}
+                        }
+                    }
+                    break;
+                case 'f':
+                    d = fou(i,j,deplacement);
+                    for ( int k=0; k<j; k=k+2 )
+                    {
+                        if ( plateau[i][j].piece[1] == 'b')
+                        {
+                        if ((deplacement[k]==xn && deplacement[k+1]==yn))
+                        {printf("Roi noir en échec\n");}
+                        }
+                        else
+                        {
+                            if ((deplacement[k]==xb && deplacement[k+1]==yb))
+                            {printf("Roi blanc en échec\n");}
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+}
+
 int mvt(char *casedep, char *casearr)
 {
-    int j;
-    booll testpromo = false;
-    int 
-    printf("Donner le case de départ:");
+    int j = 0;
+    int *deplacement = (int*)malloc(20*sizeof(int));
+    bool testpromo = false;
+    printf("Donner la case de départ: ");
     scanf("%s",casedep);
-    printf("Où voulez-vous déplacer votre pièces?");
+    printf("Où voulez-vous déplacer votre pièces ? : ");
     scanf("%s",casearr);
     // utlisation d'une fonction qui verifie si la casse d'arrive et valide 
     switch(plateau[recup(casedep)[0]][recup(casedep)[1]].piece[0])
@@ -131,7 +1069,7 @@ int mvt(char *casedep, char *casearr)
             j = roi(recup(casedep)[0],recup(casedep)[1],deplacement);
             break;
         case 'd':
-            j = dame(recup(casedep)[0],recup(casedep)[1],deplacement);
+            j = reine(recup(casedep)[0],recup(casedep)[1],deplacement);
             break;
         case 'p':
             j = pion(recup(casedep)[0],recup(casedep)[1],deplacement);
@@ -147,46 +1085,41 @@ int mvt(char *casedep, char *casearr)
             j = fou(recup(casedep)[0],recup(casedep)[1],deplacement);
             break;
         default:
-            printf("Il n'y a pas de pièce sur cette case");
+            printf("Il n'y a pas de pièce sur cette case\n");
 
     }
     for ( int i = 0; i < j; i = i+2)
     {
         if(deplacement[i] == recup(casearr)[0] && deplacement[i+1] == recup(casearr)[1])
         {
-            plateau[recup(casedep)[0]][recup(casedep)[1]].piece = plateau[recup(casearr)[0]][recup(casearr)[1]].piece;
+            plateau[recup(casearr)[0]][recup(casearr)[1]].piece = plateau[recup(casedep)[0]][recup(casedep)[1]].piece;
             plateau[recup(casedep)[0]][recup(casedep)[1]].piece = "00";
+            break;
         }
         else 
         {
-            printf("la case n'est pas valide");
-        }
-        
-        // Promotion si possible
-    if ( testpromo == true )
-    {
-        if ( plateau[recup(casearr)[0]][recup(casearr)[1]].nom_case[1] == 'n' )
-        {
-            if ( recup(casearr) == 7 ) plateau[recup(casearr)[0]][recup(casearr)[1]].piece = "rn";
-        }
-        if ( plateau[recup(casearr)[0]][recup(casearr)[1]].nom_case[1] == 'b' ) 
-        {
-            if ( recup(casearr) == 0 ) plateau[recup(casearr)[0]][recup(casearr)[1]].piece = "rb";
+            printf("la case n'est pas valide\n");
         }
     }
-    }
+    // Test Promotion
+    promotion(testpromo,casearr);
+    // Test échec
+    echec();
+    
+    affichage(plateau);
     return 0;
 }
 
 
-
-int main (void)
+int main (void) 
 {
-    char *casedep = NULL;
-    char *casearr = NULL;
+    char *casedep = (char*)malloc(4*sizeof(char));
+    char *casearr = (char*)malloc(4*sizeof(char));
     reset_plateau();
-    mvt(casedep, casearr);
-                             // Affichage du plateau sur la console
+    affichage(plateau);
+    while (1)
+    {mvt(casedep, casearr);}
+
     for (int i=0;i<8;i++)
     {
         for (int j=0;j<8;j++)
@@ -208,5 +1141,3 @@ int main (void)
 
     return 0;
 }
-
-	
